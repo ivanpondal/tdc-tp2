@@ -1,0 +1,61 @@
+\documentclass[%
+    final,
+    notitlepage,
+    narroweqnarray,
+    inline,
+    twoside,
+]{ieee}
+\usepackage{ieeefig}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{siunitx} % http://mirrors.ctan.org/install/macros/latex/contrib/siunitx.tds.zip
+\sisetup{
+    binary-units    = true,
+    round-mode      = places,
+    round-precision = 2,
+    output-decimal-marker = {,}
+}
+
+% Style to select only points from #1 to #2 (inclusive)
+\pgfplotsset{select coords between index/.style 2 args={
+    x filter/.code={
+        \ifnum\coordindex<#1\def\pgfmathresult{}\fi
+        \ifnum\coordindex>#2\def\pgfmathresult{}\fi
+    }
+}}
+
+\def\keywordsname{Palabras clave}
+
+\begin{document}
+
+\title[Trabajo Práctico 2: Rutas en Internet]{%
+       Trabajo Práctico 2: \emph{Rutas en Internet}}
+
+\author[FRIZZO, MONTEPAGANO, PONDAL]{Franco Frizzo, Pablo Montepagano
+\and{}e Iván Pondal}
+
+\journal{Teoría de las Comunicaciones (DC - FCEyN - UBA)}
+\titletext{, Trabajo Práctico 2: \emph{Rutas en Internet}}
+
+\maketitle
+
+\begin{abstract}
+[Inserte resumen aquí]
+\end{abstract}
+
+\begin{keywords}
+[palabra clave 1, palabra clave 2, palabra clave 3]
+\end{keywords}
+
+\input{sections/1-introduccion.tex}
+\input{sections/2-metodologia.tex}
+\input{sections/3-resultados.tex}
+
+\bibliographystyle{IEEEbib}
+\bibliography{informe}
+
+\end{document}
