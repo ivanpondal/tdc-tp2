@@ -34,7 +34,11 @@
         });
 
         // Create an array of alphabetical characters used to label the markers.
-        var labels = {{labels}};
+        var labels = [
+          {% for l in labels %}
+            "{{l}}",
+          {% endfor %}
+        ];
 
         // Add some markers to the map.
         // Note: The code uses the JavaScript Array.prototype.map() method to
