@@ -1,0 +1,5 @@
+geoip2==2.4.0
+ipaddress==1.0.17
+maxminddb==1.2.1
+requests==2.11.1
+scapy==2.3.3
