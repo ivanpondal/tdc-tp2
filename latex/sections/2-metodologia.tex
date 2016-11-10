@@ -1,1 +1,44 @@
 \section{Metodología}
+
+Para poder elaborar los experimentos presentados en las próximas secciones fue
+necesario desarrollar herramientas que nos permitieran estudiar distintos
+aspectos de las rutas seleccionadas.
+
+\subsection{Trazado de rutas}
+
+La primer herramienta implementada fue un \texttt{traceroute}. La misma fue
+desarrollada utilizando la estrategia de enviar mensajes \texttt{ICMP} del tipo
+\emph{Echo Request} incrementando progresivamente el campo \texttt{TTL}
+del paquete \texttt{IP}. De esta manera, si el \texttt{TTL} es menor al número
+de saltos requeridos para llegar al destino final, existirá un dispositivo en la
+ruta para el cual al decrementarlo valdrá cero. Si el nodo tiene habilitado
+el protocolo \texttt{ICMP}, responderá con un \emph{Time Exceeded}. Esto permite
+conocer para los saltos pertenecientes a la ruta con \texttt{ICMP} activado, sus
+direcciones \texttt{IP} y \emph{RTT}.
+
+Dado que la ruta utilizada para llegar a un nodo no es necesariamente
+siempre la misma, para cada valor del campo \texttt{TTL} el script desarrollado
+recibe como parámetro el número de muestras que se desean tomar. Por defecto se
+envían 30 paquetes por \texttt{TTL}. Una vez realizado el muestreo, se toma la
+dirección que generó el mayor número de respuestas y sus respectivos \emph{RTT}
+como representantes de ese valor particular del campo \texttt{TTL}.
+
+Además fue necesario considerar el caso para el cual el nodo en la ruta no
+responde mensajes \texttt{ICMP}. Esto se trató decidiendo que antes de tomar
+el número de muestras solicitado, primero se realizaran algunos \emph{Echo
+Request} con el único fin de verificar si para el \texttt{TTL} actual se recibe algún
+\emph{Time Exceeded} o \emph{Echo Reply}. En caso de no recibir respuesta, se
+incrementa en uno el \texttt{TTL}. Tanto el número de intentos como el tiempo a
+esperar hasta recibir una respuesta son parámetros de la herramienta que poseen
+valores por defecto.
+
+La herramienta concluye cuande se cumple cualquiera de las siguientes
+condiciones:
+
+\begin{itemize}
+    \item $\texttt{TTL} > 30$
+    \item El último salto consultado respondió con \emph{Echo Reply}
+\end{itemize}
+
+Toda la creación y recepción de mensajes en la red fue realizado a través de la
+biblioteca \textsc{Scapy} para \textsc{Python}.
