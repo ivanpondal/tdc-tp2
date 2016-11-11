@@ -12,3 +12,5 @@ necesario descargar las dependencias necesarias ejecutando el comando `make`.
 - maxminddb==1.2.1
 - requests==2.11.1
 - scapy==2.3.3
+- numpy>=1.8.2
+- scipy>=0.18.1
