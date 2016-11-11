@@ -15,10 +15,12 @@ def send_with_retries(destination, ttl, timeout, number_retries):
     retries = 0
     rtt = 0.0
     while res == None and retries <= number_retries:
-        rtt = time.time()
-        res = sr1(IP(dst=destination, ttl=ttl)/ICMP(), timeout=timeout,
-                verbose=0)
-        rtt = time.time() - rtt
+        try:
+            rtt = time.time()
+            res = sr1(IP(dst=destination, ttl=ttl)/ICMP(), timeout=timeout, verbose=0)
+            rtt = time.time() - rtt
+        except:
+            print "* Scapy spurious error"
         retries = retries + 1
     return (res, rtt)
 
