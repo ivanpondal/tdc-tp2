@@ -1,6 +1,14 @@
-Base de datos GeoIP de MaxMind: http://dev.maxmind.com/geoip/geoip2/geolite2/
+# Generación de mapa
 
-  wget "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz"
+Para la generación del mapa con los distintos saltos pertenecientes a la ruta es
+necesario descargar las dependencias necesarias ejecutando el comando `make`.
 
+# Bibliotecas utilizadas por Python
 
-API en Python: http://geoip2.readthedocs.io/en/latest/
+- ip2==2.4.0
+- ipaddress==1.0.17
+- Jinja2==2.8
+- MarkupSafe==0.23
+- maxminddb==1.2.1
+- requests==2.11.1
+- scapy==2.3.3
