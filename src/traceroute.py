@@ -168,6 +168,25 @@ def jump_detector(inp_hops, modified_cimbala=False, verbose=False):
 
     return hops
 
+# Print per-hop data for plot generation
+def print_hops(hops):
+    deltas = [hop['delta'] for hop in hops if hop and 'delta' in hop]
+    tau = thompson_tau(len(deltas))
+    mean_delta = numpy.mean(deltas)
+    std_delta = numpy.std(deltas)
+
+    res = 'hop hop_delta hop_norm_delta\n'
+    i = 1
+    prev_mean = 0
+    for hop in hops:
+        if hop:
+            hop_delta = (hop['mean'] - prev_mean)
+            hop_norm_delta = (hop_delta - mean_delta) / std_delta
+            res += "{} {} {}\n".format(i, hop_delta*1000, hop_norm_delta)
+            prev_mean = hop['mean']
+        i += 1
+    return res
+
 
 # Map generator
 import geoip2.database
@@ -208,19 +227,35 @@ def main():
                         help='timeout in seconds for each hop, 4 seconds by default')
     parser.add_argument('--retry', '-l', dest='hop_retry', default=2, type=int,
                         help='number of retries for each hop, 2 by default')
-    parser.add_argument('--map', '-m', dest='map_file', default=False, type=str,
+    parser.add_argument('--mock-input', '-k', dest='mock_input', default=False, type=str,
+                    help='input file with measurements to be processed')
+    parser.add_argument('--map-file', '-m', dest='map_file', default=False, type=str,
                     help='output HTML file for map of geolocalized hops')
-    parser.add_argument('--output', '-o', dest='hops_file', default=False, type=str,
-                    help='outpit file for per-hop RTT measurements')
+    parser.add_argument('--raw-out-file', '-r', dest='raw_out_file', default=False, type=str,
+                    help='output file for per-hop RTT raw measurements')
+    parser.add_argument('--out-file', '-o', dest='out_file', default=False, type=str,
+                    help='output file for processed measurements')
     args = parser.parse_args()
 
-    hops = traceroute(args.destination_address, args.hop_samples, args.hop_timeout, args.hop_retry)
+    if args.mock_input:
+        hops = None
+        import ast
+        with open(args.mock_input, 'r') as inp:
+            read_inp = inp.read()
+            hops = ast.literal_eval(read_inp)
+    else:
+        hops = traceroute(args.destination_address, args.hop_samples, args.hop_timeout, args.hop_retry)
 
-    if args.hops_file:
-        with open(args.hops_file, 'w') as hops_file:
-            pprint.pprint(hops, hops_file)
+    if args.raw_out_file:
+        with open(args.raw_out_file, 'w') as raw_out_file:
+            pprint.pprint(hops, raw_out_file)
 
-    jump_detector(hops, verbose=True, modified_cimbala=False)
+    processed_hops = jump_detector(hops, verbose=True, modified_cimbala=False)
+
+    if args.out_file:
+        with open(args.out_file, 'w') as out_file:
+            printed_hops = print_hops(processed_hops)
+            out_file.write(printed_hops)
 
     if args.map_file:
         with open(args.map_file, 'w') as map_file:
