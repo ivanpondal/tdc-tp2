@@ -3,6 +3,7 @@
 import argparse
 import time
 import pprint
+import datetime
 from scapy.all import IP, ICMP, sr1
 
 
@@ -49,6 +50,7 @@ def traceroute(
     last_hop = None
     final_hop = res[IP].src
 
+    print("Start: {}".format(datetime.datetime.now().strftime('%a %b %d %H:%M:%S %Y %z')))
     print 'Destination IP address ' + final_hop
 
     rtt = 0.0
