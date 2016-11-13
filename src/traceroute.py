@@ -154,7 +154,7 @@ def jump_detector(inp_hops, modified_cimbala=False, verbose=False):
                 hops[cur_hop['hop_no']]['outlier'] = True
 
     if verbose:
-        i = 0
+        i = 1
         for hop in hops:
             if hop:
                 outlier_msg = "<<< outlier" if hop['outlier'] else ""
