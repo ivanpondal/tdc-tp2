@@ -1,5 +1,6 @@
 #! /usr/bin/env python2
 # -*- coding: utf-8 -*-
+from __future__ import division
 import argparse
 import time
 import pprint
@@ -111,7 +112,7 @@ def thompson_tau(n):
     t = stats.t.ppf(1-(0.05/2), n-2)
     return (t * (n-1)) / (numpy.sqrt(n) * numpy.sqrt(n - 2 + t ** 2))
 
-def jump_detector(inp_hops, modified_cimbala=False, verbose=False):
+def jump_detector(inp_hops, hop_samples, modified_cimbala=False, verbose=False):
 
     if verbose:
         print "Performing intercontinental jump detection"
@@ -182,16 +183,17 @@ def jump_detector(inp_hops, modified_cimbala=False, verbose=False):
 
     if verbose:
         i = 1
-        print("Hop Most frequent IP  Avg          Delta         Std")
+        print("Hop Most frequent IP  Avg          Delta         Std     Loss%")
         for hop in hops:
             if hop:
                 outlier_msg = "<<< outlier" if hop['outlier'] else ""
                 mean_ms = hop['mean'] * 1000
+                loss = (hop_samples - len(inp_hops[i-1][hop['ip']])) / hop_samples
                 if 'delta' in hop:
                     delta_ms = hop['delta'] * 1000 if hop['delta'] else 0
-                    print "{0:>2}: {1:<15}  {2:>7.3f} ms  (d {3:>7.3f} ms) {4:6.3f} {5}".format(i, hop['ip'], mean_ms, delta_ms, hop['std']*1000, outlier_msg)
+                    print "{0:>2}: {1:<15}  {2:>7.3f} ms  (d {3:>7.3f} ms) {4:6.3f} {5:5.2f}% {6}".format(i, hop['ip'], mean_ms, delta_ms, hop['std']*1000, loss*100, outlier_msg)
                 else:
-                    print "{0:>2}: {1:<15}  {2:>7.3f} ms                 {3:6.3f} {4}".format(i, hop['ip'], mean_ms, hop['std']*1000, outlier_msg)
+                    print "{0:>2}: {1:<15}  {2:>7.3f} ms                 {3:6.3f} {4:5.2f}% {5}".format(i, hop['ip'], mean_ms, hop['std']*1000, loss*100, outlier_msg)
             else:
                 print "{0:>2}: {1:<15}".format(str(i), "N/A")
             i += 1
@@ -280,7 +282,7 @@ def main():
         with open(args.raw_out_file, 'w') as raw_out_file:
             pprint.pprint(hops, raw_out_file)
 
-    processed_hops = jump_detector(hops, verbose=True, modified_cimbala=False)
+    processed_hops = jump_detector(hops, args.hop_samples, verbose=True, modified_cimbala=False)
 
     if args.out_file:
         with open(args.out_file, 'w') as out_file:
