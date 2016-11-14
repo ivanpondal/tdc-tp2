@@ -41,16 +41,10 @@ def traceroute(
         hop_retry = 2
     ):
 
-    res = sr1(IP(dst=destination_address)/ICMP(), timeout=hop_timeout,
-            retry=hop_retry, verbose=0)
-
-    if res == None:
-        raise ValueError('Couldn\'t solve destination address')
-        return
 
     ttl = 1
     last_hop = None
-    final_hop = res[IP].src
+    final_hop = socket.gethostbyname(destination_address)
 
     print("Start: {}".format(datetime.datetime.now().strftime('%a %b %d %H:%M:%S %Y %z')))
     print 'Destination IP address ' + final_hop
