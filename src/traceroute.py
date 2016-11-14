@@ -155,15 +155,16 @@ def jump_detector(inp_hops, modified_cimbala=False, verbose=False):
 
     if verbose:
         i = 1
+        print("Hop Most frequent IP  Avg          Delta         Std")
         for hop in hops:
             if hop:
                 outlier_msg = "<<< outlier" if hop['outlier'] else ""
                 mean_ms = hop['mean'] * 1000
                 if 'delta' in hop:
                     delta_ms = hop['delta'] * 1000 if hop['delta'] else 0
-                    print "{0:>2}: {1:<15}  {2:>7.3f} ms  (d {3:>7.3f} ms) {4}".format(i, hop['ip'], mean_ms, delta_ms, outlier_msg)
+                    print "{0:>2}: {1:<15}  {2:>7.3f} ms  (d {3:>7.3f} ms) {4:6.3f} {5}".format(i, hop['ip'], mean_ms, delta_ms, hop['std']*1000, outlier_msg)
                 else:
-                    print "{0:>2}: {1:<15}  {2:>7.3f} ms {3}".format(i, hop['ip'], mean_ms, outlier_msg)
+                    print "{0:>2}: {1:<15}  {2:>7.3f} ms                 {3:6.3f} {4}".format(i, hop['ip'], mean_ms, hop['std']*1000, outlier_msg)
             else:
                 print "{0:>2}: {1:<15}".format(str(i), "N/A")
             i += 1
