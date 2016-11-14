@@ -10,7 +10,7 @@ all: $(PDF)
 
 $(PDF): $(TEX)
 	@ [ ! -f $(PDF).aux ] || md5sum $(PDF).aux > .auxmd5
-	# [ ! -f $(PDF).aux ] || bibtex $(PDF).aux
+	@ [ ! -f $(PDF).aux ] || bibtex $(PDF).aux
 	@ pdflatex $(TEXFLAGS) -jobname $(PDF) $<
 	@ if [ "x$(shell cat .auxmd5)" '!=' "x$(shell md5sum $(PDF).aux)" ]; then echo "Relatexing..." 1>&2; rm $@.pdf; make $@; fi
 

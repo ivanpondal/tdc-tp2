@@ -42,3 +42,36 @@ condiciones:
 
 Toda la creación y recepción de mensajes en la red fue realizado a través de la
 biblioteca \textsc{Scapy} para \textsc{Python}.
+
+\subsection{Identificación de saltos intercontinentales}
+
+A partir de los resultados obtenidos por la herramienta anterior, en
+particular, los valores del \emph{RTT} para cada uno de los saltos, se
+implementó una segunda herramienta en \textsc{Python} con el objetivo de
+identificar de forma automatizada cuáles de los mismos corresponden a saltos
+intercontinentales. Para hacerlo, se partió de la hipótesis de que, dada la
+considerable longitud de dichos saltos, el valor su \emph{RTT} sería
+considerablemente mayor. Así, considerando al conjunto de los valores del
+\emph{RTT} de una ruta como una muestra aleatoria, podrían atribuirse a saltos
+intercontinentales los \emph{outliers} de dicha muestra.
+
+Para la identificación de los \emph{outliers}, se partió de lo propuesto por
+Cimbala en \cite{Cimbala}. Allí se expone la \emph{técnica modificada de
+Thompson}, que consiste en calcular un valor crítico para la muestra
+(basado en su desvío estándar) y considerar como \emph{outliers} a
+las mediciones cuya distancia a la media sea mayor que este valor. Dicho
+valor se calcula a partir de la siguiente fórmula:
+\[ \tau_n = \frac{t_{\alpha / 2} \cdot (n - 1)}
+    {\sqrt{n} \cdot \sqrt{n - 2 + \left(t_{\alpha / 2}\right)^2}} \]
+donde $n$ es la cantidad de mediciones y $t_{\alpha / 2}$ es el valor crítico de
+la distribución t de Student, con $n - 2$ grados de libertad, para $\alpha =
+0.5$. Se considera que un valor $X_i$ es \emph{outlier} cuando
+\[ \vert X_i - \bar{X} \vert > S \cdot \tau_n \]
+
+Cimbala propone la aplicación del método en forma iterativa: se evalúa si debe
+o no eliminarse el valor más extremo de la muestra, y en caso afirmativo, se
+vuelven a calcular $\tau_n$, $\bar{X}$ y $S$ para la muestra modificada. En
+este trabajo, también se evaluó la aplicación no iterativa del método. Esto
+reduce la sensibilidad de la técnica, ya que evita ir reduciendo el desvío
+estándar de la muestra y, por lo tanto, el margen de valores que se consideran
+aceptables.
