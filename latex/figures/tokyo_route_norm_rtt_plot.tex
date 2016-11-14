@@ -1,0 +1,37 @@
+\renewcommand\ThompsonTau{1.87100136908}
+
+\begin{tikzpicture}[baseline]
+    \begin{axis}[
+            title={},
+            xlabel={Número de salto},
+            ylabel={\texttt{RTT} promedio entre saltos normalizado},
+            scaled x ticks=false,
+            scaled y ticks=false,
+            width=0.45\textwidth,
+            height=0.36\textwidth,
+            legend pos=outer north east,
+            legend cell align=left,
+            ymajorgrids,
+            yminorgrids,
+            minor tick num=1,
+            xtick=data,
+        ]
+        \addplot[
+                ybar,
+                fill=violet!10,
+                draw=violet,
+            ] table[x=hop,y=norm_delta]{../exp/tokyo.csv};
+
+        \coordinate (A1) at (axis cs:0,\ThompsonTau);
+        % \coordinate (A2) at (axis cs:0,-\ThompsonTau);
+        \coordinate (O1) at (rel axis cs:0,0);
+        \coordinate (O2) at (rel axis cs:1,0);
+
+        \draw [violet, thick] (A1 -| O1) -- (A1 -| O2);
+        % \draw [violet, thick] (A2 -| O1) -- (A2 -| O2);
+
+        \node[anchor=south east] at (A1 -| O2) {$\tau_n$};
+        % \node[anchor=south east] at (A2 -| O2) {$-\tau_n$};
+
+    \end{axis}
+\end{tikzpicture}

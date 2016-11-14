@@ -80,7 +80,7 @@ def thompson_tau(n):
     t = stats.t.ppf(1-(0.05/2), n-2)
     return (t * (n-1)) / (numpy.sqrt(n) * numpy.sqrt(n - 2 + t ** 2))
 
-def jump_detector(inp_hops, hop_samples, modified_cimbala=False, verbose=False):
+def jump_detector(inp_hops, hop_samples, modified_thompson=False, verbose=False):
 
     if verbose:
         print "Performing intercontinental jump detection"
@@ -117,8 +117,8 @@ def jump_detector(inp_hops, hop_samples, modified_cimbala=False, verbose=False):
         i += 1
 
 
-    # Modified Cimbala method
-    if modified_cimbala:
+    # Modified Thompson method
+    if modified_thompson:
 
         while len(deltas) > 2:
             print "{} remaining".format(len(deltas))
@@ -129,9 +129,6 @@ def jump_detector(inp_hops, hop_samples, modified_cimbala=False, verbose=False):
             deltas = sorted(deltas, key=lambda x: x['deviation'])
             cur_hop = deltas[-1]
             tau = thompson_tau(len(deltas)) * std_delta
-            print "    mean: {0:7.3f}, std: {1:7.3f}".format(mean_delta * 1000, std_delta * 1000)
-            print "    hop {0:<2} (d {1:7.3f})".format(cur_hop['hop_no'], cur_hop['delta'] * 1000)
-            print "    tau: {0:7.3f}, deviation: {1:7.3f}".format(tau * 1000, cur_hop['deviation'] * 1000)
             if cur_hop['deviation'] > tau:
                 hops[cur_hop['hop_no']]['outlier'] = True
                 deltas.pop()
@@ -143,6 +140,9 @@ def jump_detector(inp_hops, hop_samples, modified_cimbala=False, verbose=False):
         mean_delta = numpy.mean([x['delta'] for x in deltas])
         std_delta = numpy.std([x['delta'] for x in deltas])
         tau = thompson_tau(len(deltas)) * std_delta
+
+        if verbose:
+            print "Thompson tau value (n = {}): {}".format(len(deltas), thompson_tau(len(deltas)))
 
         for cur_hop in deltas:
             deviation = abs(cur_hop['delta'] - mean_delta)
@@ -159,9 +159,11 @@ def jump_detector(inp_hops, hop_samples, modified_cimbala=False, verbose=False):
                 loss = (hop_samples - len(inp_hops[i-1][hop['ip']])) / hop_samples
                 if 'delta' in hop:
                     delta_ms = hop['delta'] * 1000 if hop['delta'] else 0
-                    print "{0:>2}: {1:<15}  {2:>7.3f} ms  (d {3:>7.3f} ms) {4:6.3f} {5:5.2f}% {6}".format(i, hop['ip'], mean_ms, delta_ms, hop['std']*1000, loss*100, outlier_msg)
+                    print "{0:>2}: {1:<15}  {2:>7.3f} ms  (d {3:>7.3f} ms) {4:6.3f} {5:5.2f}% {6}" \
+                        .format(i, hop['ip'], mean_ms, delta_ms, hop['std']*1000, loss*100, outlier_msg)
                 else:
-                    print "{0:>2}: {1:<15}  {2:>7.3f} ms                 {3:6.3f} {4:5.2f}% {5}".format(i, hop['ip'], mean_ms, hop['std']*1000, loss*100, outlier_msg)
+                    print "{0:>2}: {1:<15}  {2:>7.3f} ms                 {3:6.3f} {4:5.2f}% {5}" \
+                        .format(i, hop['ip'], mean_ms, hop['std']*1000, loss*100, outlier_msg)
             else:
                 print "{0:>2}: {1:<15}".format(str(i), "N/A")
             i += 1
@@ -175,15 +177,16 @@ def print_hops(hops):
     mean_delta = numpy.mean(deltas)
     std_delta = numpy.std(deltas)
 
-    res = 'hop hop_delta hop_norm_delta\n'
+    res = 'hop mean std delta norm_delta\n'
     i = 1
-    prev_mean = 0
     for hop in hops:
-        if hop:
-            hop_delta = (hop['mean'] - prev_mean)
-            hop_norm_delta = (hop_delta - mean_delta) / std_delta
-            res += "{} {} {}\n".format(i, hop_delta*1000, hop_norm_delta)
-            prev_mean = hop['mean']
+        if hop and 'delta' in hop:
+            mean = hop['mean']
+            std = hop['std']
+            delta = hop['delta']
+            norm_delta = abs(delta - mean_delta) / std_delta
+            res += "{} {} {} {} {}\n".format(i, mean * 1000,
+                std * 1000, delta*1000, norm_delta)
         i += 1
     return res
 
@@ -227,14 +230,16 @@ def main():
                         help='timeout in seconds for each hop, 4 seconds by default')
     parser.add_argument('--retry', '-l', dest='hop_retry', default=2, type=int,
                         help='number of retries for each hop, 2 by default')
-    parser.add_argument('--mock-input', '-k', dest='mock_input', default=False, type=str,
-                    help='input file with measurements to be processed')
+    parser.add_argument('--modified-thompson', dest='modified_thompson', action='store_true',
+                    help='use modified Thompson method for outlier detection')
     parser.add_argument('--map-file', '-m', dest='map_file', default=False, type=str,
                     help='output HTML file for map of geolocalized hops')
-    parser.add_argument('--raw-out-file', '-r', dest='raw_out_file', default=False, type=str,
-                    help='output file for per-hop RTT raw measurements')
     parser.add_argument('--out-file', '-o', dest='out_file', default=False, type=str,
                     help='output file for processed measurements')
+    parser.add_argument('--raw-out-file', '-r', dest='raw_out_file', default=False, type=str,
+                    help='output file for per-hop RTT raw measurements')
+    parser.add_argument('--mock-input', '-k', dest='mock_input', default=False, type=str,
+                    help='input file with measurements to be processed')
     args = parser.parse_args()
 
     if args.mock_input:
@@ -250,7 +255,8 @@ def main():
         with open(args.raw_out_file, 'w') as raw_out_file:
             pprint.pprint(hops, raw_out_file)
 
-    processed_hops = jump_detector(hops, args.hop_samples, verbose=True, modified_cimbala=False)
+    processed_hops = jump_detector(hops, args.hop_samples, verbose=True,
+        modified_thompson=args.modified_thompson)
 
     if args.out_file:
         with open(args.out_file, 'w') as out_file:
