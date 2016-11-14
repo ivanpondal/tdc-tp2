@@ -96,7 +96,7 @@ utilizada para el salto intercontinental.
 
 \subsection{Ruta 2 (www.mpg.de)}
 
-Luego estudiamos dos rutas distintas para llegar desde Argentina a la página web de los Institutos Max Planck (\texttt{www.mpg.de}), en Alemania. Al momento de realizar los experimentos, la IP a la que resuelve ese host es \texttt{134.76.31.198}. Elegimos este destino para hacer una comparación que nos parecía interesante: rutas a través de proveedores comerciales de Internet, y rutas a través de redes académicas como RedClara y Géant. Para hacer la comparación, ejecutamos la herramienta desde la red de la FCEyN y desde Fibertel, en ambos casos, conectados por Ethernet a cada red.
+Luego estudiamos dos rutas distintas para llegar desde Argentina a la página web de los Institutos Max Planck (\texttt{www.mpg.de}), en Alemania. Al momento de realizar los experimentos, la IP a la que resuelve ese host es \texttt{134.76.31.198}. Elegimos este destino para hacer una comparación que nos parecía interesante: rutas a través de proveedores comerciales de Internet, y rutas a través de redes académicas como RedClara\footnote{https://www.redclara.net/} y Géant. Para hacer la comparación, ejecutamos la herramienta desde la red de la FCEyN y desde Fibertel, en ambos casos, conectados por Ethernet a cada red.
 
 \subsubsection{Ruta 2A - Internet comercial}
 
@@ -137,5 +137,8 @@ De los 21 saltos que fueron necesarios para llegar a la IP destino, 6 (29\%) no 
     \label{res:esc2a:map}
 \end{figure*}
 
-En la figura \ref{res:esc2a:map} se muestra el planisferio con la ubicación detectada con GeoIP para cada salto. Allí se ven dos saltos intercontinentales: de Argentina a EEUU, y de EEUU a Londres, que se corresponden con los hops 10 y 12. Para tener más datos que soporten esta inferencia, podemos mirar los reversos de IP y los promedios de RTT entre saltos. El salto 10, con IP \texttt{67.17.94.249}, tiene como reverso el hostname \texttt{ae1-300G.ar5.MIA1.gblx.net}, lo cual nos hace pensar que es un host de una punta de un enlace de 300Gbps entre Argentina y Miami.
+En la figura \ref{res:esc2a:map} se muestra el planisferio con la ubicación detectada con GeoIP para cada salto. Allí se ven dos saltos intercontinentales: de Argentina a EEUU, y de EEUU a Londres, que se corresponden con los hops 10 y 12. Para tener más datos que soporten esta inferencia, podemos mirar los reversos de IP y los promedios de RTT entre saltos. El salto 10, con IP \texttt{67.17.94.249}, tiene como reverso el hostname \texttt{ae1-300G.ar5.MIA1.gblx.net}, lo cual nos hace pensar que es un host en Miami, probablemente de la red de Global Crossing (Level3). El promedio de RTTs del salto 10 es de 158ms (que es un poco alto para lo esperado para un enlace Argentina-Miami, de aprox 130ms\footnote{http://www.verizonenterprise.com/about/network/latency/}). El salto 12 tiene IP \texttt{4.69.154.137} y reverso de IP \texttt{ae-3-80.edge5.Frankfurt1.Level3.net}. GeoIP ubica ese host en Londres, el RTT entre saltos es de unos 108ms, lo cual está entre lo esperado para un enlace EEUU-Europa.
 
+El método de Cimbala detectó el salto intercontinental entre Argentina y EEUU, pero no el salto EEUU-Europa.
+
+\subsubsection{Ruta 2B - Redes Avanzadas}
