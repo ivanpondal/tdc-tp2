@@ -101,54 +101,41 @@ Luego estudiamos dos rutas distintas para llegar desde Argentina a la página we
 \subsubsection{Ruta 2A - Internet comercial}
 
 
+La ruta obtenida cuando la trazamos desde el ISP Fibertel es la siguiente:
 
-
-\begin{Verbatim}[fontsize=\small]
- Hop Most frequent IP  Avg          Delta         Std
- 1: 192.168.0.1       75.269 ms                  6.878 
+\begin{Verbatim}[fontsize=\scriptsize]
+Hop Most frequent IP  Avg          Delta         Std     Loss%
+ 1: 192.168.0.1       75.269 ms                  6.878  0.00% 
  2: N/A            
  3: N/A            
  4: N/A            
  5: N/A            
- 6: 200.89.161.77     86.499 ms  (d  11.231 ms)  9.165 
- 7: 200.89.165.197    85.378 ms  (d   0.000 ms)  8.914 
- 8: 200.89.165.222    86.714 ms  (d   1.335 ms)  9.365 
+ 6: 200.89.161.77     86.499 ms  (d  11.231 ms)  9.165  0.00% 
+ 7: 200.89.165.197    85.378 ms  (d   0.000 ms)  8.914  0.00% 
+ 8: 200.89.165.222    86.714 ms  (d   1.335 ms)  9.365  0.00% 
  9: N/A            
-10: 67.17.94.249     245.380 ms  (d 158.666 ms) 14.962 <<< outlier
+10: 67.17.94.249     245.380 ms  (d 158.666 ms) 14.962  0.00% <<< outlier
 11: N/A            
-12: 4.69.154.137     354.046 ms  (d 108.666 ms) 14.393 
-13: 4.69.154.137     359.716 ms  (d   5.670 ms) 13.302 
-14: 212.162.4.6      347.716 ms  (d   0.000 ms) 22.849 
-15: 188.1.144.134    332.160 ms  (d   0.000 ms) 16.108 
-16: 188.1.231.126    332.714 ms  (d   0.554 ms) 17.657 
-17: 134.76.250.251   331.388 ms  (d   0.000 ms) 13.188 
-18: 134.76.250.4     351.826 ms  (d  20.437 ms) 13.845 
-19: 134.76.250.238   361.931 ms  (d  10.105 ms) 14.248 
-20: 134.76.249.101   349.935 ms  (d   0.000 ms) 14.059 
-21: 134.76.31.198    326.050 ms  (d   0.000 ms) 11.225
+12: 4.69.154.137     354.046 ms  (d 108.666 ms) 14.393  0.00% 
+13: 4.69.154.137     359.716 ms  (d   5.670 ms) 13.302  0.00% 
+14: 212.162.4.6      347.716 ms  (d   0.000 ms) 22.849  0.00% 
+15: 188.1.144.134    332.160 ms  (d   0.000 ms) 16.108  0.00% 
+16: 188.1.231.126    332.714 ms  (d   0.554 ms) 17.657  0.00% 
+17: 134.76.250.251   331.388 ms  (d   0.000 ms) 13.188 20.00% 
+18: 134.76.250.4     351.826 ms  (d  20.437 ms) 13.845  0.00% 
+19: 134.76.250.238   361.931 ms  (d  10.105 ms) 14.248  0.00% 
+20: 134.76.249.101   349.935 ms  (d   0.000 ms) 14.059  0.00% 
+21: 134.76.31.198    326.050 ms  (d   0.000 ms) 11.225  0.00%
 \end{Verbatim}
 
+De los 21 saltos que fueron necesarios para llegar a la IP destino, 6 (29\%) no responden los \emph{Time exceeded}. Sin estos hops, la ruta obtenida es de 15 saltos.
 
-\begin{tikzpicture}
-  \begin{axis}[
-    title=titulo grafico,
-    ylabel=RTT entre saltos (ms),
-    xlabel=TTL
-  ]
-    \addplot+[error bars/.cd,
-    y dir=both,y explicit]
-    coordinates {
-    (1,75)     +- (0,1.13)
-    (6,11.23)  +- (0,0.24)
-    (7,0)      +- (0,0.5)
-    (8,1.34)   +- (0,0.45)
-    (10, 158.6)  +- (0,2.9)
-    (12,108.67)  +- (0,1.84)
-    (13, 5.67)   +- (0,0.36)
-    (14,0)       +-  (0,0.74)
-    (15,0)       +-  (0,0.8)
-    (16,0.55)    +-  (0,0.47)
-    (17,0)       +-  (0,0.51)
-    };
-  \end{axis}
-\end{tikzpicture}
+\begin{figure*}
+    \figdef[dim]{figures/maxplanck_desde_fibertel_map}
+    \caption{Localización de saltos según geolocalización de direcciones IP para
+    el sitio \emph{www.mpg.de} desde el ISP Fibertel.}
+    \label{res:esc2a:map}
+\end{figure*}
+
+En la figura \ref{res:esc2a:map} se muestra el planisferio con la ubicación detectada con GeoIP para cada salto. Allí se ven dos saltos intercontinentales: de Argentina a EEUU, y de EEUU a Londres, que se corresponden con los hops 10 y 12. Para tener más datos que soporten esta inferencia, podemos mirar los reversos de IP y los promedios de RTT entre saltos. El salto 10, con IP \texttt{67.17.94.249}, tiene como reverso el hostname \texttt{ae1-300G.ar5.MIA1.gblx.net}, lo cual nos hace pensar que es un host de una punta de un enlace de 300Gbps entre Argentina y Miami.
+
