@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Marker Clustering</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var locations = [
+        
+          {lat: -34.6006, lng: -58.4887 },
+        
+          {lat: -34.6006, lng: -58.4887 },
+        
+          {lat: -34.6006, lng: -58.4887 },
+        
+          {lat: 37.751, lng: -97.822 },
+        
+          {lat: 37.751, lng: -97.822 },
+        
+          {lat: 37.751, lng: -97.822 },
+        
+          {lat: 51.4964, lng: -0.1224 },
+        
+          {lat: 51.2993, lng: 9.491 },
+        
+          {lat: 51.2993, lng: 9.491 },
+        
+          {lat: 51.5604, lng: 9.9319 },
+        
+          {lat: 51.5604, lng: 9.9319 },
+        
+          {lat: 51.5604, lng: 9.9319 },
+        
+          {lat: 51.5604, lng: 9.9319 },
+        
+          {lat: 51.5333, lng: 9.9333 },
+        
+      ]
+      function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 3,
+          center: {lat: -28.024, lng: 140.887}
+        });
+
+        // Create an array of alphabetical characters used to label the markers.
+        var labels = [
+          
+            "1",
+          
+            "6",
+          
+            "7",
+          
+            "8",
+          
+            "10",
+          
+            "12",
+          
+            "13",
+          
+            "14",
+          
+            "15",
+          
+            "16",
+          
+            "17",
+          
+            "18",
+          
+            "19",
+          
+            "20",
+          
+            "21",
+          
+        ];
+
+        // Add some markers to the map.
+        // Note: The code uses the JavaScript Array.prototype.map() method to
+        // create an array of markers based on a given "locations" array.
+        // The map() method here has nothing to do with the Google Maps API.
+        var markers = locations.map(function(location, i) {
+          return new google.maps.Marker({
+            position: location,
+            label: labels[i % labels.length]
+          });
+        });
+
+        // Add a marker clusterer to manage the markers.
+        var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+        var camino = new google.maps.Polyline({
+          path: locations,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        camino.setMap(map);
+      }
+
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzpknV2IKQPVCeTodAnz06VmCrGz4ZqDU&callback=initMap">
+    </script>
+  </body>
+</html>

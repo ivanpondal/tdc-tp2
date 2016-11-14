@@ -24,3 +24,5 @@ extra/gephi_network_renderer/gephi_network_renderer.iml
 *.mmdb.gz
 
 *.pyc
+
+*.backup
