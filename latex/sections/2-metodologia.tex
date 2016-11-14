@@ -75,3 +75,9 @@ este trabajo, también se evaluó la aplicación no iterativa del método. Esto
 reduce la sensibilidad de la técnica, ya que evita ir reduciendo el desvío
 estándar de la muestra y, por lo tanto, el margen de valores que se consideran
 aceptables.
+
+\subsection{Geolocalización IP}
+
+Para contrastar los resultados del método de Cimbala con otra fuente, hicimos geolocalización IP de los saltos obtenidos usando las bases de datos de la empresa MaxMind\footnote{https://www.maxmind.com}. Esta empresa ofrece de forma gratuita bases con granularidad a nivel ciudad, que es suficiente para detectar saltos intercontinentales.
+
+Los resultados obtenidos los volcamos en un mapa generado con Google Maps. La herramienta los genera si se usa el flag \texttt{--map-file} para indicar dónde se debe guardar el archivo HTML. Es importante señalar que, como es esperable que en un \emph{traceroute} haya muchos nodos agrupados en una misma ciudad, en el mapa los mostramos en un mismo ``cluster'', y por eso al ver el planisferio en cada lugar donde hay más de un hop, aparece un número que indica la cantidad de hops allí detectados (al hacer zoom se van separando).
