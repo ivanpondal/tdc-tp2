@@ -4,7 +4,8 @@ import argparse
 import time
 import pprint
 import datetime
-from scapy.all import IP, ICMP, sr1
+import socket
+from scapy.all import IP, ICMP, sr1, sr
 
 
 # Traceroute
@@ -54,25 +55,51 @@ def traceroute(
     print 'Destination IP address ' + final_hop
 
     rtt = 0.0
-    hops = []
-    while ttl <= MAX_HOPS and last_hop != final_hop:
-        hops.append({})
-        [res, rtt] = send_with_retries(final_hop, ttl, hop_timeout, hop_retry)
-        if res == None:
-            print "{0:>2}: N/A".format(ttl)
-            ttl = ttl + 1
-            continue
-        for sample in range(hop_samples):
-            [res, rtt] = send_with_retries(final_hop, ttl, hop_timeout, hop_retry)
-            if res != None:
-                if res[IP].src not in hops[ttl - 1]:
-                    hops[ttl - 1][res[IP].src] = []
-                hops[ttl - 1][res[IP].src].append(rtt)
-        last_hop = most_frequent_hop(hops[ttl - 1])
-        print "{0:>2}: {1:<15}".format(ttl, last_hop)
-        ttl = ttl + 1
+    hops = [{} for i in range(MAX_HOPS)]
 
-    return hops
+    ultimoid = 0
+    ttl_final = MAX_HOPS
+
+    for t in range(hop_samples):
+        primer_id = ultimoid
+        probes_a_enviar = []
+        for ttl in range(1, MAX_HOPS+1):
+            icmpid = primer_id + ttl
+            probes_a_enviar.append(IP(dst=final_hop, ttl=ttl) / ICMP(id=icmpid))
+        ultimoid = icmpid
+
+        try:
+            res, unanswered = sr(probes_a_enviar, verbose=0, timeout=hop_timeout)
+        except socket.error as err:
+            sys.exit(err)
+
+        for sent, received in res:
+            if received.type == 0:
+                # ECHO reply
+                id_recibido = received[1].id
+            elif received.type == 11:
+                # TTL exceeded
+                id_recibido = received[3].id
+            else:
+                # Otro tipo de paquete que no me interesa
+                continue
+            if id_recibido < primer_id + 1 or id_recibido > ultimoid:
+                # recibi una respuesta de algo que no mande en esta tanda. Lo salteo
+                continue
+
+
+            ttl = id_recibido - primer_id
+            iphop = received.src
+            if received.type == 0:
+                if iphop == final_hop:
+                    if ttl < ttl_final:
+                        ttl_final = ttl
+            rtt = (received.time - sent.sent_time)
+            if iphop not in hops[ttl-1]:
+                hops[ttl-1][iphop] = []
+            hops[ttl-1][iphop].append(rtt)
+
+    return hops[:ttl_final+1]
 
 
 # Jump detector
