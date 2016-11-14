@@ -56,7 +56,7 @@ detectados.
     \figdef[dim]{figures/tokyo_route_norm_rtt_plot}
     \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
     y valor de $\tau_n$ para la ruta 1.}
-    \label{res:esc1:rtt}
+    \label{res:esc1:rttnorm}
 \end{figure}
 
 Un valor sumamente importante para analizar por qué se obtuvieron tales
@@ -130,15 +130,80 @@ Hop Most frequent IP  Avg          Delta         Std     Loss%
 
 De los 21 saltos que fueron necesarios para llegar a la IP destino, 6 (29\%) no responden los \emph{Time exceeded}. Sin estos hops, la ruta obtenida es de 15 saltos.
 
-\begin{figure*}
+\begin{figure}[H]
     \figdef[dim]{figures/maxplanck_desde_fibertel_map}
     \caption{Localización de saltos según geolocalización de direcciones IP para
     el sitio \emph{www.mpg.de} desde el ISP Fibertel.}
     \label{res:esc2a:map}
-\end{figure*}
+\end{figure}
 
 En la figura \ref{res:esc2a:map} se muestra el planisferio con la ubicación detectada con GeoIP para cada salto. Allí se ven dos saltos intercontinentales: de Argentina a EEUU, y de EEUU a Londres, que se corresponden con los hops 10 y 12. Para tener más datos que soporten esta inferencia, podemos mirar los reversos de IP y los promedios de RTT entre saltos. El salto 10, con IP \texttt{67.17.94.249}, tiene como reverso el hostname \texttt{ae1-300G.ar5.MIA1.gblx.net}, lo cual nos hace pensar que es un host en Miami, probablemente de la red de Global Crossing (Level3). El promedio de RTTs del salto 10 es de 158ms (que es un poco alto para lo esperado para un enlace Argentina-Miami, de aprox 130ms\footnote{http://www.verizonenterprise.com/about/network/latency/}). El salto 12 tiene IP \texttt{4.69.154.137} y reverso de IP \texttt{ae-3-80.edge5.Frankfurt1.Level3.net}. GeoIP ubica ese host en Londres, el RTT entre saltos es de unos 108ms, lo cual está entre lo esperado para un enlace EEUU-Europa.
 
-El método de Cimbala detectó el salto intercontinental entre Argentina y EEUU, pero no el salto EEUU-Europa.
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_fibertel_rtt_plot}
+    \caption{Valores obtenidos para el \texttt{RTT} entre saltos ($X_i$) de la ruta 2A.}
+    \label{res:esc2a:rtt}
+\end{figure}
+
+El método de Cimbala detectó el salto intercontinental entre Argentina y EEUU, pero no el salto EEUU-Europa. Si miramos el gráfico \ref{res:esc2a:rttnorm}, vemos que el hop 12 quedó justo en el límite por debajo de $\tau_n$. Quizás, al hacer otra medición, una variación mínima podría lograr que se detecte bien el salto.
+
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_fibertel_norm_rtt_plot}
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
+    y valor de $\tau_n$ para la ruta 2A.}
+    \label{res:esc2a:rttnorm}
+\end{figure}
 
 \subsubsection{Ruta 2B - Redes Avanzadas}
+
+La ruta obtenida cuando la trazamos desde la red de la UBA fue la siguiente:
+
+\begin{Verbatim}[fontsize=\scriptsize]
+Hop Most frequent IP  Avg          Delta         Std     Loss%
+ 1: 157.92.32.99      66.945 ms                  7.966  0.00% 
+ 2: N/A            
+ 3: 157.92.47.98      72.727 ms  (d   5.782 ms)  9.598  0.00% 
+ 4: 157.92.47.2       68.480 ms  (d   0.000 ms)  7.018  0.00% 
+ 5: N/A            
+ 6: 168.96.0.18       66.386 ms  (d   0.000 ms)  6.313  0.00% 
+ 7: 200.0.204.154     73.264 ms  (d   6.877 ms) 10.241  0.00% 
+ 8: 200.0.204.63     109.706 ms  (d  36.442 ms)  8.238  0.00% 
+ 9: 62.40.124.36     292.699 ms  (d 182.993 ms)  7.936  0.00% <<< outlier
+10: 62.40.98.81      301.031 ms  (d   8.332 ms)  7.720  0.00% 
+11: 62.40.98.61      308.358 ms  (d   7.327 ms)  7.186  0.00% 
+12: 62.40.112.146    319.237 ms  (d  10.879 ms)  6.780  0.00% 
+13: 188.1.144.137    321.472 ms  (d   2.235 ms) 10.064  0.00% 
+14: 188.1.231.126    319.931 ms  (d   0.000 ms) 10.518  0.00% 
+15: 134.76.250.251   323.690 ms  (d   3.759 ms)  8.331 10.00% 
+16: 134.76.250.4     325.366 ms  (d   1.675 ms) 12.971  0.00% 
+17: 134.76.147.17    320.704 ms  (d   0.000 ms)  7.337  0.00% 
+18: 134.76.249.201   321.922 ms  (d   1.218 ms)  8.492  0.00% 
+19: 134.76.31.198    320.150 ms  (d   0.000 ms)  7.008  0.00%
+\end{Verbatim}
+
+Como era esperable, obtuvimos una ruta con menos saltos, ya que se trata de una ruta especial de redes académicas, que cuenta con un enlace transatlántico directo entre Sudamérica y Europa.
+De los 19 saltos que fueron necesarios para llegar a la IP destino, 2 (11\%) no responden los \emph{Time exceeded}. Sin estos hops, la ruta obtenida es de 17 saltos.
+
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_uba_map}
+    \caption{Localización de saltos según geolocalización de direcciones IP para
+    el sitio \emph{www.mpg.de} desde la red de la UBA.}
+    \label{res:esc2b:map}
+\end{figure}
+
+En la figura \ref{res:esc2b:map} se muestra el planisferio con la ubicación detectada con GeoIP para cada salto. Allí se ve un solo salto intercontinental: de Argentina a Europa, que se corresponde con el hop 9. Para tener más datos que soporten esta inferencia, podemos mirar los reversos de IP y los promedios de RTT entre saltos. El salto 9, con IP \texttt{62.40.124.36}, fue geolocalizado en Londres por la IP, y tiene como reverseo \texttt{redclara.lon.uk.geant.net.}, lo cual es un indicio fuerte de que la detección de GeoIP fue correcta, y coincide con los planos de topología que ofrece RedClara en su sitio web\footnote{https://www.redclara.net/index.php/en/network-and-connectivity/topologia}. El promedio de RTTs del salto es de 182ms, lo cual está dentro de lo esperable para un salto Argentina-Europa.
+
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_uba_rtt_plot}
+    \caption{Valores obtenidos para el \texttt{RTT} entre saltos ($X_i$) de la ruta 2B.}
+    \label{res:esc2b:rtt}
+\end{figure}
+
+El método de Cimbala detectó el salto intercontinental entre Argentina y Londres. Si miramos el gráfico \ref{res:esc2b:rtt}, vemos que el único salto que supera los 50ms es el 9, y el siguiente en ms es el salto 8, que por lo que vemos corresponde a un enlace entre Argentina y Brasil (no se ve en el mapa generado por GeoIP, pero el reverso de IP es \texttt{br-ar.redclara.net} y el RTT entre saltos es de ~36ms, cuando un salto a Uruguay suele estar alrededor de los 12ms\footnote{Por ej. el ping a \texttt{rau-ar.redclara.net} da un RTT total de unos 14ms desde la red de UBA}).
+
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_uba_norm_rtt_plot}
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
+    y valor de $\tau_n$ para la ruta 2B.}
+    \label{res:esc2b:rttnorm}
+\end{figure}
