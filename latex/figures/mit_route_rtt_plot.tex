@@ -1,0 +1,24 @@
+\begin{tikzpicture}[baseline]
+    \begin{axis}[
+            title={},
+            xlabel={Número de salto},
+            ylabel={\texttt{RTT} promedio entre saltos (ms)},
+            scaled x ticks=false,
+            scaled y ticks=false,
+            width=0.45\textwidth,
+            height=0.36\textwidth,
+            legend pos=outer north east,
+            legend cell align=left,
+            ymajorgrids,
+            yminorgrids,
+            minor tick num=1,
+            xtick=data,
+        ]
+        \addplot[
+                ybar,
+                fill=blue!10,
+                draw=blue,
+            ] table[x=hop,y=delta]{../exp/mit.csv};
+
+    \end{axis}
+\end{tikzpicture}

@@ -207,3 +207,70 @@ El método de Cimbala detectó el salto intercontinental entre Argentina y Londr
     y valor de $\tau_n$ para la ruta 2B.}
     \label{res:escb2:rttnorm}
 \end{figure}
+
+\subsection{Ruta C (mit.edu)}
+
+Como destino para el tercero de los experimentos de trazado de rutas, se
+eligió el Massachusetts Institute of Technology (MIT), ubicado en el este de
+los Estados Unidos. El objetivo era observar una ruta previsiblemente corta,
+con un único salto intercontinental, y verificar si al reducirse la cantidad
+de saltos mejoraba la calidad de los resultados, en particular, disminuyendo
+la cantidad de veces en que un salto presentaba un \texttt{RTT}s menor al
+salto anterior.
+
+En primera instancia, se intentó trazar la ruta hacia su
+sitio web, disponible bajo el dominio \emph{web.mit.edu}. Sin embargo, se
+encontró que la ruta observada contaba solo con 7 saltos, y un \emph{ping}
+hacia dicho dominio reveló \texttt{RTT}s inferiores a los 20 ms, valores
+similares a los observados para otros sitios ubicados en Buenos
+Aires\footnote{Por ejemplo, para el sitio de la UBA (\emph{www.uba.ar}) los
+valores de \texttt{RTT} obtenidos fueron en general ligeramente mayores.}.
+Esto permitió concluir que la ruta no contenía saltos intercontinentales, y
+que la \texttt{IP} de destino, pese a estar geolocalizada en los Estados
+Unidos, correspondía a un \emph{host} ubicado físicamente en Argentina. Una
+posibilidad es que el acceso al sitio sea brindado a través de una CDN
+(Content Delivery Network).
+
+Por este motivo, el experimento se realizó con el dominio \emph{mit.edu}, que,
+al momento de llevarlo a cabo, resolvía a la dirección \texttt{IP}
+\texttt{104.66.69.243}. Se observó la siguiente ruta:
+
+\begin{figure}[H]
+    \figdef[dim]{figures/mit_route_table}
+    \caption{Ruta obtenida hacia \emph{mit.edu}.}
+    \label{res:escC:table}
+\end{figure}
+
+Puede verse que se trata de una ruta considerablemente más corta que las
+anteriores, con un total de 10 saltos, de los cuales 4 ($40\%$) no
+respondieron con un \emph{Time exceeded}. Cabe destacar que, entre los saltos
+que sí respondieron, la única anomalía se observa en el \emph{hop} 5, que
+presenta un \texttt{RTT} menor al de los \emph{hops} 6 y 7. Los \texttt{RTT}s
+de los demás saltos se encuentran en orden creciente. Esto puede contrastarse
+con los experimentos anteriores, donde la proporción de saltos donde se
+observan inversiones en el orden de los \texttt{RTT}s es considerablemente
+mayor.
+
+En la Figura \ref{res:escC:map} se puede observar el resultado de geolocalizar
+las \texttt{IP}s de la ruta mediante GeoIP.
+
+\begin{figure}[H]
+    \figdef[dim]{figures/mit_route_map}
+    \caption{Localización de saltos según geolocalización de direcciones IP para
+    el dominio \emph{mit.edu}.}
+    \label{res:escC:map}
+\end{figure}
+
+\begin{figure}[H]
+    \figdef[dim]{figures/mit_route_rtt_plot}
+    \caption{Valores obtenidos para el \texttt{RTT} entre saltos ($X_i$) de la ruta 2B.}
+    \label{res:escC:rtt}
+\end{figure}
+
+
+\begin{figure}[H]
+    \figdef[dim]{figures/mit_route_norm_rtt_plot}
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
+    y valor de $\tau_n$ para la ruta 2B.}
+    \label{res:escC:rttnorm}
+\end{figure}
