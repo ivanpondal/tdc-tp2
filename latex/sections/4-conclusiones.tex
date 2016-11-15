@@ -1,2 +1,23 @@
 \section{Conclusiones}
 
+Del trabajo realizado pueden extraerse conclusiones interesantes acerca del
+poder de las herramientas utilizadas a la hora de analizar la topología y el
+funcionamiento de las rutas en \emph{Internet}.
+
+Algo para destacar es que, en la mayoría de los casos, el método de detección
+de \emph{outliers} utilizando el valor $\tau$ resultó efectivo para
+identificar los mismos, al menos partiendo de una inspección visual de los
+gráficos obtenidos. Sin embargo, hay una excepción notoria es el caso de la
+ruta 2A, donde un valor correspondiente a un salto intercontinental fue
+omitido por una diferencia mínima.
+
+Observando los gráficos del \texttt{RTT} por saltos normalizado, es posible
+advertir una diferencia clara entre los \emph{hops} con \texttt{RTT}s cercanos
+a la media de la distribución, que una vez normalizados no exceden en general
+un valor de $0.5$, y los \emph{outliers}, que se encuentran siempre por encima
+de $1.5$. Así, un valor de corte fijo en $1.5$ podría haber sido utilizado
+para identificar a los \emph{outliers} evitando la omisión recién mencionada.
+No obstante, al no tener en cuenta la varianza de la distribución, esta
+metodología puede fallar de aparecer rutas donde la diferencia no sea tan
+marcada, por lo que su efectividad debería ser probada experimentalmente con
+mayor profundidad.
