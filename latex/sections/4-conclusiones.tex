@@ -32,3 +32,10 @@ No obstante, al no tener en cuenta la varianza de la distribución, esta
 metodología puede fallar de aparecer rutas donde la diferencia no sea tan
 marcada, por lo que su efectividad debería ser probada experimentalmente con
 mayor profundidad.
+
+En el paper de Jobst\cite{Jobst} se describen unas cuantas ``anomalías'' de traceroute. En los experimentos realizados aparecieron algunas de ellas, mientras que otras no. Por supuesto, la denominada \emph{missing hops} apareció en todos los experimentos, ya que es sumamente común que algunos \emph{routers} en el camino no respondan. La anomalía denominada \emph{missing destination} también se presentó (es también muy común que un \emph{host} esté configurado para no responder los \emph{ICMP Echo}), pero a la hora de elegir las rutas a analizar, se dejó fuera estos casos. 
+
+
+También se presentaron problemas en la obtención de los RTT (\emph{False RTTs}). En la ruta C, por ejemplo, se ve un incremento negativo del RTT entre los hops 6 y 7. En la B2, también, entre los hops 16 y 17. Como se discutió previamente en el análisis de la ruta A, esto podría ser indicativo de un path asimétrico entre el envío y la respuesta (toman distintas rutas). No se hallaron situaciones como las descriptas con respecto a los links MPLS.
+
+
