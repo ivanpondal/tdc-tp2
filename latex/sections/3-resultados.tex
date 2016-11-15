@@ -13,7 +13,7 @@ destino con $\texttt{TTL} = 22$.
 
 \begin{figure}[H]
     \figdef[dim]{figures/tokyo_route_table}
-    \caption{Dirección \texttt{IP} para cada \texttt{TTL}.}
+    \caption{Ruta obtenida hacia \emph{www.u-tokyo.ac.jp}.}
 \end{figure}
 
 De los $22$ paquetes enviados, $4$ de ellos no generaron
@@ -103,30 +103,11 @@ Luego estudiamos dos rutas distintas para llegar desde Argentina a la página we
 
 La ruta obtenida cuando la trazamos desde el ISP Fibertel es la siguiente:
 
-\begin{Verbatim}[fontsize=\scriptsize]
-Hop Most frequent IP  Avg          Delta         Std     Loss%
- 1: 192.168.0.1       75.269 ms                  6.878  0.00% 
- 2: N/A            
- 3: N/A            
- 4: N/A            
- 5: N/A            
- 6: 200.89.161.77     86.499 ms  (d  11.231 ms)  9.165  0.00% 
- 7: 200.89.165.197    85.378 ms  (d   0.000 ms)  8.914  0.00% 
- 8: 200.89.165.222    86.714 ms  (d   1.335 ms)  9.365  0.00% 
- 9: N/A            
-10: 67.17.94.249     245.380 ms  (d 158.666 ms) 14.962  0.00% <<< outlier
-11: N/A            
-12: 4.69.154.137     354.046 ms  (d 108.666 ms) 14.393  0.00% 
-13: 4.69.154.137     359.716 ms  (d   5.670 ms) 13.302  0.00% 
-14: 212.162.4.6      347.716 ms  (d   0.000 ms) 22.849  0.00% 
-15: 188.1.144.134    332.160 ms  (d   0.000 ms) 16.108  0.00% 
-16: 188.1.231.126    332.714 ms  (d   0.554 ms) 17.657  0.00% 
-17: 134.76.250.251   331.388 ms  (d   0.000 ms) 13.188 20.00% 
-18: 134.76.250.4     351.826 ms  (d  20.437 ms) 13.845  0.00% 
-19: 134.76.250.238   361.931 ms  (d  10.105 ms) 14.248  0.00% 
-20: 134.76.249.101   349.935 ms  (d   0.000 ms) 14.059  0.00% 
-21: 134.76.31.198    326.050 ms  (d   0.000 ms) 11.225  0.00%
-\end{Verbatim}
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_fibertel_table}
+    \caption{Ruta obtenida hacia \emph{www.mpg.de} desde el ISP Fibertel.}
+    \label{res:escB1:table}
+\end{figure}
 
 De los 21 saltos que fueron necesarios para llegar a la IP destino, 6 (29\%) no responden los \emph{Time exceeded}. Sin estos hops, la ruta obtenida es de 15 saltos.
 
@@ -158,28 +139,11 @@ El método de Cimbala detectó el salto intercontinental entre Argentina y EEUU,
 
 La ruta obtenida cuando la trazamos desde la red de la UBA fue la siguiente:
 
-\begin{Verbatim}[fontsize=\scriptsize]
-Hop Most frequent IP  Avg          Delta         Std     Loss%
- 1: 157.92.32.99      66.945 ms                  7.966  0.00% 
- 2: N/A            
- 3: 157.92.47.98      72.727 ms  (d   5.782 ms)  9.598  0.00% 
- 4: 157.92.47.2       68.480 ms  (d   0.000 ms)  7.018  0.00% 
- 5: N/A            
- 6: 168.96.0.18       66.386 ms  (d   0.000 ms)  6.313  0.00% 
- 7: 200.0.204.154     73.264 ms  (d   6.877 ms) 10.241  0.00% 
- 8: 200.0.204.63     109.706 ms  (d  36.442 ms)  8.238  0.00% 
- 9: 62.40.124.36     292.699 ms  (d 182.993 ms)  7.936  0.00% <<< outlier
-10: 62.40.98.81      301.031 ms  (d   8.332 ms)  7.720  0.00% 
-11: 62.40.98.61      308.358 ms  (d   7.327 ms)  7.186  0.00% 
-12: 62.40.112.146    319.237 ms  (d  10.879 ms)  6.780  0.00% 
-13: 188.1.144.137    321.472 ms  (d   2.235 ms) 10.064  0.00% 
-14: 188.1.231.126    319.931 ms  (d   0.000 ms) 10.518  0.00% 
-15: 134.76.250.251   323.690 ms  (d   3.759 ms)  8.331 10.00% 
-16: 134.76.250.4     325.366 ms  (d   1.675 ms) 12.971  0.00% 
-17: 134.76.147.17    320.704 ms  (d   0.000 ms)  7.337  0.00% 
-18: 134.76.249.201   321.922 ms  (d   1.218 ms)  8.492  0.00% 
-19: 134.76.31.198    320.150 ms  (d   0.000 ms)  7.008  0.00%
-\end{Verbatim}
+\begin{figure}[H]
+    \figdef[dim]{figures/maxplanck_desde_uba_table}
+    \caption{Ruta obtenida hacia \emph{www.mpg.de} desde la red de la UBA.}
+    \label{res:escB1:table}
+\end{figure}
 
 Como era esperable, obtuvimos una ruta con menos saltos, ya que se trata de una ruta especial de redes académicas, que cuenta con un enlace transatlántico directo entre Sudamérica y Europa.
 De los 19 saltos que fueron necesarios para llegar a la IP destino, 2 (11\%) no responden los \emph{Time exceeded}. Sin estos hops, la ruta obtenida es de 17 saltos.
@@ -304,7 +268,7 @@ en Amsterdam, no pudo ser geolocalizada mediante PlotIP. No obstante,
 siguiendo la misma línea de razonamiento, y teniendo en cuenta los valores
 observados para los \texttt{RTT}s, es razonable concluir que también debe
 estar ubicada en los Estados Unidos, lo cual, por otra parte, tiene sentido
-teniendo en cuenta que corresponde a una universidad estadounidense.
+dado que corresponde a una universidad estadounidense.
 
 Del análisis anterior podemos destacar cómo la geolocalización de direcciones
 \texttt{IP} puede ser sumamente imprecisa y llevar a conclusiones erróneas,
