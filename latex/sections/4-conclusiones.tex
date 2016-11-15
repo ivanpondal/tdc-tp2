@@ -4,6 +4,17 @@ Del trabajo realizado pueden extraerse conclusiones interesantes acerca del
 poder de las herramientas utilizadas a la hora de analizar la topología y el
 funcionamiento de las rutas en \emph{Internet}.
 
+Es posible notar cómo, para rutas largas, la capacidad de detección de los
+saltos intercontinentales parece decaer. Esto es especialmente notorio en el
+caso del escenario A, correspondiente a la ruta más extensa de las tres, donde
+solo pudo detectarse correctamente uno de tres saltos intercontinentales. Como
+ya se discutió en el análisis de esta ruta, esto puede deberse a que las
+rutas de tal longitud resultan poco estables. Durante el tiempo que demora
+en realizarse el análisis de \emph{traceroute}, es posible que partes de la
+ruta se modifiquen, cambiando, por ejemplo, el número de \emph{hop}
+correspondiente a un salto intercontinental. De suceder esto, se produciría
+un claro efecto negativo en la posibilidad de identificar dicho salto.
+
 Algo para destacar es que, en la mayoría de los casos, el método de detección
 de \emph{outliers} utilizando el valor $\tau$ resultó efectivo para
 identificar los mismos, al menos partiendo de una inspección visual de los
