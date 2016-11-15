@@ -14,3 +14,5 @@ necesario descargar las dependencias necesarias ejecutando el comando `make`.
 - scapy==2.3.3
 - numpy>=1.8.2
 - scipy>=0.18.1
+
+Pueden instalarse mediante el comando `pip install requirements.txt`.
