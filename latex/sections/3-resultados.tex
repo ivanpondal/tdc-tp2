@@ -54,7 +54,7 @@ detectados.
 
 \begin{figure}[H]
     \figdef[dim]{figures/tokyo_route_norm_rtt_plot}
-    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{\vert X_i-\bar{X}\vert}{S}$)
     y valor de $\tau_n$ para la ruta A.}
     \label{res:escA:rttnorm}
 \end{figure}
@@ -149,7 +149,7 @@ El método de Cimbala detectó el salto intercontinental entre Argentina y EEUU,
 
 \begin{figure}[H]
     \figdef[dim]{figures/maxplanck_desde_fibertel_norm_rtt_plot}
-    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{\vert X_i-\bar{X}\vert}{S}$)
     y valor de $\tau_n$ para la ruta 2A.}
     \label{res:escb1:rttnorm}
 \end{figure}
@@ -203,7 +203,7 @@ El método de Cimbala detectó el salto intercontinental entre Argentina y Londr
 
 \begin{figure}[H]
     \figdef[dim]{figures/maxplanck_desde_uba_norm_rtt_plot}
-    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{\vert X_i-\bar{X}\vert}{S}$)
     y valor de $\tau_n$ para la ruta 2B.}
     \label{res:escb2:rttnorm}
 \end{figure}
@@ -251,8 +251,39 @@ con los experimentos anteriores, donde la proporción de saltos donde se
 observan inversiones en el orden de los \texttt{RTT}s es considerablemente
 mayor.
 
-En la Figura \ref{res:escC:map} se puede observar el resultado de geolocalizar
-las \texttt{IP}s de la ruta mediante GeoIP.
+Los valores medidos para el \texttt{RTT} entre saltos se muestran en
+la Figura \ref{res:escC:rtt}. Se evidencia un único valor notoriamente mayor
+al resto, que se ubica entre los saltos 7 y 8.
+
+\begin{figure}[H]
+    \figdef[dim]{figures/mit_route_rtt_plot}
+    \caption{Valores obtenidos para el \texttt{RTT} entre saltos ($X_i$) de la ruta 2B.}
+    \label{res:escC:rtt}
+\end{figure}
+
+Esto es reafirmado por el método de detección de \emph{outliers} de Cimbala
+(ver Figura \ref{res:escC:rttnorm}), que señala como único \emph{outlier} al
+\emph{hop} número 8. Todos los demás valores están por debajo de los 20 ms,
+lo cual es indicio de cercanía geográfica entre estos \emph{hops}.
+
+\begin{figure}[H]
+    \figdef[dim]{figures/mit_route_norm_rtt_plot}
+    \caption{\texttt{RTT} entre saltos normalizado ($\frac{\vert X_i-\bar{X}\vert}{S}$)
+    y valor de $\tau_n$ para la ruta 2B.}
+    \label{res:escC:rttnorm}
+\end{figure}
+
+En la Figura \ref{res:escC:map} se muestra el resultado de geolocalizar las
+\texttt{IP}s de la ruta mediante GeoIP. Claramente, es distinto lo esperado.
+En primer lugar, se ubica un salto intercontinental luego de dos \emph{hops}
+que contestaron, es decir, entre los \emph{hops} 6 y 7. No obstante, de
+un sencillo análisis de los \texttt{RTT}s se deduce que dicho salto debe
+estar ubicado entre los \emph{hops} 7 y 8. Realizando una búsqueda
+\texttt{DNS} inversa de la \texttt{IP} correspondiente al salto 7, vemos que
+corresponde al nombre \texttt{ae6.baires3.bai.seabone.net}, lo cual parece
+indicar que está ubicado en Buenos Aires. Esto contradice a GeoIP, que ubica
+este \emph{hop} en el centro de Italia, pero se ajusta bien a los resultados
+mostrados por el \emph{traceroute}.
 
 \begin{figure}[H]
     \figdef[dim]{figures/mit_route_map}
@@ -261,16 +292,21 @@ las \texttt{IP}s de la ruta mediante GeoIP.
     \label{res:escC:map}
 \end{figure}
 
-\begin{figure}[H]
-    \figdef[dim]{figures/mit_route_rtt_plot}
-    \caption{Valores obtenidos para el \texttt{RTT} entre saltos ($X_i$) de la ruta 2B.}
-    \label{res:escC:rtt}
-\end{figure}
+En cuanto al \emph{hop} 8, una búsqueda \texttt{DNS} inversa indica que la
+autoridad de nombres correspondiente es \texttt{dns-ops.arin.net}
+(\emph{American Registry for Internet Numbers}), lo cual parece señalar que
+su verdadera ubicación es en los Estados Unidos. Esto coincide con lo indicado
+por un servicio alternativo para la geolocalización de \texttt{IP}s,
+PlotIP\footnote{http://www.plotip.com/}, que la localiza en Washington, EE.UU.
 
+La dirección \texttt{IP} de destino, \texttt{104.66.69.243}, que GeoIP indica
+en Amsterdam, no pudo ser geolocalizada mediante PlotIP. No obstante,
+siguiendo la misma línea de razonamiento, y teniendo en cuenta los valores
+observados para los \texttt{RTT}s, es razonable concluir que también debe
+estar ubicada en los Estados Unidos, lo cual, por otra parte, tiene sentido
+teniendo en cuenta que corresponde a una universidad estadounidense.
 
-\begin{figure}[H]
-    \figdef[dim]{figures/mit_route_norm_rtt_plot}
-    \caption{\texttt{RTT} entre saltos normalizado ($\frac{X_i-\bar{X}}{S}$)
-    y valor de $\tau_n$ para la ruta 2B.}
-    \label{res:escC:rttnorm}
-\end{figure}
+Del análisis anterior podemos destacar cómo la geolocalización de direcciones
+\texttt{IP} puede ser sumamente imprecisa y llevar a conclusiones erróneas,
+si no se confrontan sus resultados con los producidos mediante técnicas
+distintas.
